@@ -1,7 +1,7 @@
 import { stripe } from "#config/stripe.js";
 import { Request, Response } from "express";
 
-const endpointSecret = "whsec_PmpmfExUs3M4StRlYFs8rqL3wP9jrxwg";
+const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
 export const stripeWebhook = async (req: Request, res: Response) => {
    let event;
