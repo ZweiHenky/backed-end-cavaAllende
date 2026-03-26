@@ -18,6 +18,7 @@ class ProductEntity implements ProductInterface {
         public view?: string,
         public mouth?: string,
         public recomendation?: string,
+        public type_id?: number,
     ) {}
 
     static fromJSON(json: ProductInterface): ProductEntity {
@@ -37,7 +38,8 @@ class ProductEntity implements ProductInterface {
             json.noise,
             json.view,
             json.mouth,
-            json.recomendation
+            json.recomendation,
+            json.type_id
         )
     }
 
@@ -58,7 +60,8 @@ class ProductEntity implements ProductInterface {
             noise: this.noise,
             view: this.view,
             mouth: this.mouth,
-            recomendation: this.recomendation
+            recomendation: this.recomendation,
+            type_id: this.type_id
         }
     }
 }

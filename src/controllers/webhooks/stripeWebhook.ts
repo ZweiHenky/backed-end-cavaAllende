@@ -1,5 +1,6 @@
 import { stripe } from "#config/stripe.js";
 import { Request, Response } from "express";
+import { processSuccessfulPaymentService } from "#services/webhooks/processSuccessfulPayment.service.js";
 
 const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
@@ -22,10 +23,19 @@ export const stripeWebhook = async (req: Request, res: Response) => {
         // Handle the event
         switch (event.type) {
             case 'payment_intent.succeeded':
-            const paymentIntent = event.data.object;
-            // Then define and call a method to handle the successful payment intent.
-            // handlePaymentIntentSucceeded(paymentIntent);
-            console.log(`✅ Payment intent succeeded.`, paymentIntent);
+                const paymentIntent = event.data.object;
+                try {
+                    const processed = await processSuccessfulPaymentService(paymentIntent);
+                    if (processed) {
+                        console.log(`✅ Purchase transaction completed successfully for: ${paymentIntent.id}`);
+                    } else {
+                        console.log(`⚠️ No order metadata found for payment intent: ${paymentIntent.id}`);
+                    }
+                } catch (error) {
+                    console.error("Error processing successful payment:", error);
+                }
+                
+                console.log(`✅ Payment intent succeeded.`, paymentIntent.id);
             break;
             case 'payment_method.attached':
             const paymentMethod = event.data.object;
@@ -40,4 +50,4 @@ export const stripeWebhook = async (req: Request, res: Response) => {
         // Return a response to acknowledge receipt of the event
         res.json({received: true});  
     };
-}
+};

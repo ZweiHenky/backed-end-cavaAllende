@@ -1,49 +1,24 @@
-import { stripe } from "#config/stripe.js"
-import { ok } from "#utils/returnSucces.js"
-import { NextFunction, Request, Response } from "express"
+import { CreatePaymentDto } from "#domain/dtos/stripe/createPayment.dto.js";
+import { createPaymentService } from "#services/stripe/createPayment.service.js";
+import { ok } from "#utils/returnSucces.js";
+import { NextFunction, Request, Response } from "express";
 
 export const createPayment = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { amount, currency } = req.body
+        const [dto, error] = CreatePaymentDto.create(req.body);
 
-        console.log(typeof amount, typeof currency);
-        
-
-        const customer = await stripe.customers.create()
-
-        if (!customer) {
-            throw new Error("Customer not created")
+        if (error) {
+            return res.status(400).json({ 
+                status: 400,
+                message: error.message 
+            });
         }
 
-        const ephemeralKey = await stripe.ephemeralKeys.create(
-            { customer: customer.id }, 
-            { apiVersion: "2026-01-28.clover" }
-        )
-        const paymentIntent = await stripe.paymentIntents.create({
-            amount: amount * 100,
-            currency:currency,
-            customer: customer.id,
-            automatic_payment_methods: {
-                enabled: true,
-            },
-            metadata: {
-                userId: "1"
-            }
-        })
+        const data = await createPaymentService(dto!);
 
-        if (!paymentIntent) {
-            throw new Error("Payment intent not created")
-        }
-
-        const data = {
-            paymentIntent: paymentIntent.client_secret,
-            ephemeralKey: ephemeralKey.secret,
-            customer: customer.id,
-            publishableKey: process.env.STRIPE_PUBLISHABLE_KEY
-        }
-
-        ok(res, data, 200, "Payment created successfully")
+        ok(res, data, 200, "Payment created successfully");
     } catch (error) {
-        next(error)
+        console.log(error);
+        next(error);
     }
-}
+};

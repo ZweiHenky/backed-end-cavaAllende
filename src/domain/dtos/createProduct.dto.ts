@@ -17,6 +17,7 @@ export class CreateProductDto {
         public view?: string,
         public mouth?: string,
         public recomendation?: string,
+        public type_id?: number,
     ) {}
 
     static create(data: ProductInterface): [CreateProductDto | null, Error | null] {
@@ -24,7 +25,7 @@ export class CreateProductDto {
         const {
             name, price, stock, category_id, image, is_active,
             producer, variant, fermentation, vintages, temperature, 
-            noise, view, mouth, recomendation
+            noise, view, mouth, recomendation, type_id
         } = data
 
         if (!name) {
@@ -47,10 +48,14 @@ export class CreateProductDto {
             return [null, new Error("Image is required")]
         }
 
+        if (!type_id) {
+            return [null, new Error("Type id is required")]
+        }
+
         return [new CreateProductDto(
             name, price, stock, category_id, image, is_active,
             producer, variant, fermentation, vintages, temperature, 
-            noise, view, mouth, recomendation
+            noise, view, mouth, recomendation, type_id
         ), null]
     }
 }

@@ -15,4 +15,13 @@ export interface ProductInterface {
     view?: string;
     mouth?: string;
     recomendation?: string;
+    type_id?: number;
+}
+
+export interface ReduceStockItem {
+    product: {
+        product_id: number;
+        stock?: number;
+    };
+    quantity: number;
 }
