@@ -1,11 +1,14 @@
 import { sql } from "#config/db.js";
 
-export const getPurchasesTodayModel = async () => {
+export const getPurchasesTodayModel = async (statuses: string[]) => {
+
     const res = await sql`
         SELECT * FROM purchases
-        WHERE DATE(created_at) = CURRENT_DATE
-        AND (status = 'paid' OR status = 'on_the_way')
-        ORDER BY created_at DESC
+        WHERE created_at >= CURRENT_DATE
+        AND created_at < CURRENT_DATE + INTERVAL '1 day'
+        AND status = ANY(${statuses})
+        ORDER BY created_at DESC;
     `;
+    console.log(res);
     return res;
 };

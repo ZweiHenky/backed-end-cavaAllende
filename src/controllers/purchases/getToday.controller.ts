@@ -4,7 +4,17 @@ import { ok } from "#utils/returnSucces.js";
 
 export const getToday = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const purchases = await getPurchasesTodayService();
+        const { status } = req.query;
+        
+
+        if(!status){
+            res.status(400).json({ message: "Status is required" });
+            return;
+        }
+
+        const statuses = (status as string).split(",");
+
+        const purchases = await getPurchasesTodayService(statuses);
         ok(res, purchases, 200, "Today's purchases retrieved successfully");
     } catch (error) {
         next(error);
