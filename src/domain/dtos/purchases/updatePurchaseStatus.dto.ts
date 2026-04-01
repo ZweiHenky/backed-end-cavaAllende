@@ -1,18 +1,22 @@
+interface UpdatePurchaseStatusDtoInterface {
+    status: string;
+    id: number;
+}
+
 export class UpdatePurchaseStatusDto {
-    constructor(public id: string, public status: string) {}
+    constructor(public status: string, public id: number) {}
 
-    static create(params: any, body: any): [UpdatePurchaseStatusDto | null, Error | null] {
-        const { id } = params;
-        const { status } = body;
-
-        if (!id) {
-            return [null, new Error("purchase id parameter is required")];
-        }
+    static create(body: UpdatePurchaseStatusDtoInterface): [UpdatePurchaseStatusDto | null, Error | null] {
+        const { status, id } = body;
 
         if (!status) {
             return [null, new Error("status is required")];
         }
 
-        return [new UpdatePurchaseStatusDto(String(id), String(status)), null];
+        if (!id) {
+            return [null, new Error("id is required")];
+        }
+
+        return [new UpdatePurchaseStatusDto(status, id), null];
     }
 }

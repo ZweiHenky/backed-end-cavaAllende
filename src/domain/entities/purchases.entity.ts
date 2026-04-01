@@ -11,8 +11,9 @@ export class PurchaseEntity implements PurchaseInsert {
         public shipping_cost?: number,
         public payment_reference?: string | null,
         public status?: string,
-        public shipping_address?: string | null,
         public notes?: string | null,
+        public delivery_id?: string | null,
+        public location_id?: number | null,
     ) {}
 
     static fromJSON(json: PurchaseInsert): PurchaseEntity {
@@ -26,8 +27,9 @@ export class PurchaseEntity implements PurchaseInsert {
             json.shipping_cost,
             json.payment_reference,
             json.status,
-            json.shipping_address,
-            json.notes
+            json.notes,
+            json.delivery_id,
+            json.location_id
         )
     }
 
@@ -42,8 +44,9 @@ export class PurchaseEntity implements PurchaseInsert {
             shipping_cost: this.shipping_cost,
             payment_reference: this.payment_reference,
             status: this.status,
-            shipping_address: this.shipping_address,
-            notes: this.notes
+            notes: this.notes,
+            delivery_id: this.delivery_id,
+            location_id: this.location_id
         }
     }
 }

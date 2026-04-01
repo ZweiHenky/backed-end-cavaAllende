@@ -31,12 +31,11 @@ export const processPurchaseTransaction = async (
                 total, 
                 payment_method, 
                 payment_reference, 
-                shipping_address, 
                 status,
                 notes,
                 location_id
             ) VALUES (
-                $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12
+                $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11
             )
             RETURNING *
         `;
@@ -49,7 +48,6 @@ export const processPurchaseTransaction = async (
             purchaseData.total, 
             purchaseData.payment_method, 
             purchaseData.payment_reference || null, 
-            purchaseData.shipping_address || null, 
             "paid",
             purchaseData.notes || null,
             location.location_id

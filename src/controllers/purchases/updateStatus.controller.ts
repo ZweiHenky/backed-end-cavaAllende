@@ -5,7 +5,7 @@ import { ok } from "#utils/returnSucces.js";
 
 export const updateStatus = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const [dto, error] = UpdatePurchaseStatusDto.create(req.params, req.body);
+        const [dto, error] = UpdatePurchaseStatusDto.create({ ...req.body, id: Number(req.params.id) });
 
         if (error) {
             return res.status(400).json({ 
@@ -14,7 +14,7 @@ export const updateStatus = async (req: Request, res: Response, next: NextFuncti
             });
         }
 
-        const purchase = await updatePurchaseStatusService(dto!.id, dto!.status);
+        const purchase = await updatePurchaseStatusService(dto!.status, dto!.id);
 
         if (!purchase) {
             return res.status(404).json({ 
