@@ -6,8 +6,14 @@ import { errorHandler } from './config/errorHandler.js';
 import cors from "cors";
 import { auth } from '#lib/auth.js';
 import { toNodeHandler } from 'better-auth/node';
+import { createServer } from 'http';
+import { initSocket } from '#socket/initSocket.js';
 
 const app = express();
+
+const server = createServer(app);
+
+initSocket(server);
 
 app.use(cors({
   origin: "*", // en prod limita esto
@@ -28,4 +34,4 @@ app.all("/api/auth/*splat", toNodeHandler(auth));
 
 app.use(errorHandler);
 
-export default app;
+export default server;

@@ -1,4 +1,4 @@
-import { stripe } from "#config/stripe.js";
+import { stripe } from "#config/stripe/stripe.js";
 import { CreatePaymentDto } from "#domain/dtos/stripe/createPayment.dto.js";
 import { createLocation } from "#models/locations/createLocation.js";
 import { getLocationByField } from "#models/locations/getLocationByField.js";

@@ -12,11 +12,12 @@ export class PurchaseEntity implements PurchaseInsert {
         public payment_reference?: string | null,
         public status?: string,
         public notes?: string | null,
-        public delivery_id?: string | null,
-        public location_id?: number | null,
+        public purchase_id?: string,
+        public delivery_id?: string,
+        public location_id?: number,
     ) {}
 
-    static fromJSON(json: PurchaseInsert): PurchaseEntity {
+    static fromJSON(json: any): PurchaseEntity {
         return new PurchaseEntity(
             json.subtotal,
             json.total,
@@ -28,12 +29,13 @@ export class PurchaseEntity implements PurchaseInsert {
             json.payment_reference,
             json.status,
             json.notes,
+            json.purchase_id,
             json.delivery_id,
             json.location_id
-        )
+        );
     }
 
-    toJSON(): PurchaseInsert {
+    toJSON(): any {
         return {
             subtotal: this.subtotal,
             total: this.total,
@@ -45,8 +47,9 @@ export class PurchaseEntity implements PurchaseInsert {
             payment_reference: this.payment_reference,
             status: this.status,
             notes: this.notes,
+            purchase_id: this.purchase_id,
             delivery_id: this.delivery_id,
             location_id: this.location_id
-        }
+        };
     }
 }

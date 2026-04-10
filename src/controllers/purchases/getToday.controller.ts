@@ -14,6 +14,8 @@ export const getToday = async (req: Request, res: Response, next: NextFunction) 
 
         const statuses = (status as string).split(",");
 
+        console.log(statuses);
+
         const purchases = await getPurchasesTodayService(statuses);
         ok(res, purchases, 200, "Today's purchases retrieved successfully");
     } catch (error) {

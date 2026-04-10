@@ -1,7 +1,7 @@
-import app from "./src/app.js";
+import server from "./src/app.js";
 
 const port = "3000";
 
-app.listen(port, () => {
+server.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });

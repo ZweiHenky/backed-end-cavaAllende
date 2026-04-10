@@ -8,6 +8,7 @@ export class AssignDeliveryDto {
 
     static create(body: AssignDeliveryDtoInterface): [AssignDeliveryDto | null, Error | null] {
         const { delivery_id, id } = body;
+        
 
         if (!delivery_id) {
             return [null, new Error("delivery_id is required")];

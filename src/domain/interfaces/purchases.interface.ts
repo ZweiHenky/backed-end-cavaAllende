@@ -10,6 +10,6 @@ export interface PurchaseInsert {
     status?: string;
     shipping_address?: string | null;
     notes?: string | null;
-    delivery_id?: string | null;
-    location_id?: number | null;
+    delivery_id?: string;
+    location_id?: number;
 }

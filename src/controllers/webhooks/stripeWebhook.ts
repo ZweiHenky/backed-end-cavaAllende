@@ -1,10 +1,15 @@
-import { stripe } from "#config/stripe.js";
+import { stripe } from "#config/stripe/stripe.js";
 import { Request, Response } from "express";
 import { processSuccessfulPaymentService } from "#services/webhooks/processSuccessfulPayment.service.js";
+import { getIo } from "#socket/initSocket.js";
+import { sendCreatePurchase } from "#socket/events/purchases/sendCreatePurchase.js";
 
 const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
 export const stripeWebhook = async (req: Request, res: Response) => {
+
+    const io = getIo();
+
    let event;
     if (endpointSecret) {
         // Get the signature sent by Stripe
@@ -28,6 +33,7 @@ export const stripeWebhook = async (req: Request, res: Response) => {
                     const processed = await processSuccessfulPaymentService(paymentIntent);
                     if (processed) {
                         console.log(`✅ Purchase transaction completed successfully for: ${paymentIntent.id}`);
+                        sendCreatePurchase(io, paymentIntent.id);
                     } else {
                         console.log(`⚠️ No order metadata found for payment intent: ${paymentIntent.id}`);
                     }

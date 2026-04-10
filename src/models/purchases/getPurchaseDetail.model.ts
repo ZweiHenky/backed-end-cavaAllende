@@ -5,9 +5,15 @@ export const getPurchaseDetailModel = async (purchaseId: string) => {
     const purchase = await sql`
         SELECT 
             p.*,
-            l.*
+            l.*,
+            u.name as user_name,
+            u."phoneNumber" as user_phone,
+            d.name as delivery_name,
+            d."phoneNumber" as delivery_phone
         FROM purchases p
         LEFT JOIN locations l ON p.location_id = l.location_id
+        LEFT JOIN "user" u ON p.user_id = u.id
+        LEFT JOIN "user" d ON p.delivery_id = d.id
         WHERE p.purchase_id = ${purchaseId}
     `;
 

@@ -1,5 +1,6 @@
 import { pool } from "#config/db.js";
 import { LocationEntity } from "#domain/entities/location.entity.js";
+import { PurchaseEntity } from "#domain/entities/purchases.entity.js";
 import { PurchaseInsert } from "#domain/interfaces/purchases.interface.js";
 
 export const processPurchaseTransaction = async (
@@ -54,7 +55,7 @@ export const processPurchaseTransaction = async (
         ];
         
         const purchaseRes = await client.query(purchaseQuery, purchaseValues);
-        const purchase = purchaseRes.rows[0];
+        const purchase : PurchaseEntity = purchaseRes.rows[0];
         
         if (!purchase) {
             throw new Error("Failed to create purchase");
