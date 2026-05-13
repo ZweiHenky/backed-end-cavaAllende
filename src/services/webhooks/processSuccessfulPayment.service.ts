@@ -1,38 +1,34 @@
 import { sendPush } from "#api/oneSignal/client/sendPush.js";
-import { processPurchaseTransaction } from "#models/purchases/processPurchaseTransaction.model.js";
 import { pushNewOrderDelivery } from "#api/oneSignal/delivery/pushNewOrderDelivery.js";
+import { getPurchaseById } from "#models/purchases/getById.js";
+import { updateStatusAndPaymentId } from "#models/purchases/updateStatusAndPaymentId.js";
+import { addCharge } from "#utils/purchases/chargeInProcess.js";
+import Stripe from "stripe";
 
-export const processSuccessfulPaymentService = async (paymentIntent: any) => {
+export const processSuccessfulPaymentService = async (paymentIntent: Stripe.PaymentIntent) => {
     const userId = paymentIntent.metadata?.userId;
-    const orderStr = paymentIntent.metadata?.order;
-    const locationStr = paymentIntent.metadata?.location;
+    const orderId = paymentIntent.metadata?.order_id;
+
+    if (!userId || !orderId) {
+        throw new Error("Metadata not found");
+    }
+
+    const purchase = await getPurchaseById(Number(orderId));
     
-    if (orderStr) {
-        const order = JSON.parse(orderStr);
-        const location = JSON.parse(locationStr);
+    if (purchase?.purchase_id) {
+        const res = await updateStatusAndPaymentId(Number(purchase.purchase_id), "paid", paymentIntent.id);
         
-        const purchaseData = {
-            user_id: userId,
-            subtotal: paymentIntent.amount / 100,
-            total: paymentIntent.amount / 100,
-            payment_method: "stripe",
-            payment_reference: paymentIntent.id,
-            status: "completed"
-        };
-        
-        const result = await processPurchaseTransaction(purchaseData, order, location);
-
-        if (result) {
-
-            sendPush("Compra realizada", `Tu compra #${result.purchase_id} ha sido realizada`, result.user_id!, result.purchase_id!);
-            pushNewOrderDelivery("Nueva compra", `Nueva compra realizada por ${result.user_id}`, result.purchase_id!);
+        if (res) {
+            sendPush("Compra realizada", `Tu compra #${purchase.purchase_id} ha sido realizada`, purchase.user_id!, purchase.purchase_id!);
+            pushNewOrderDelivery("Nueva compra", `Nueva compra realizada por ${res.user_id}`, res.purchase_id!);
 
             return {
                 success: true,
-                purchase: result
+                purchase: res
             };
         }
-        return false;
+    }else{
+        throw new Error("Purchase not found");
     }
-    return false;
+
 };

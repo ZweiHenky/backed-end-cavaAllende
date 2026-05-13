@@ -7,7 +7,7 @@ export const addPurchaseModel = async (data: PurchaseInsert, tx?: any) => {
     const res = await sql`
         INSERT INTO purchases (
             user_id, subtotal, discount, taxes, shipping_cost, 
-            total, payment_method, payment_reference, shipping_address, notes
+            total, payment_method, payment_reference, shipping_address, notes, secure_code
         ) VALUES (
             ${data.user_id || null}, 
             ${data.subtotal}, 
@@ -18,7 +18,8 @@ export const addPurchaseModel = async (data: PurchaseInsert, tx?: any) => {
             ${data.payment_method}, 
             ${data.payment_reference || null}, 
             ${data.shipping_address || null}, 
-            ${data.notes || null}
+            ${data.notes || null},
+            ${data.secure_code || null}
         )
         RETURNING *
     `;

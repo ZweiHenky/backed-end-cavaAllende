@@ -22,6 +22,16 @@ export const auth = betterAuth({
         database: "neondb",
         ssl: true,
     }),
+    user:{
+        additionalFields:{
+            role:{
+                type:["user","delivery","admin"],
+                default:"user",
+                required:false,
+                input:false,
+            }
+        }
+    },
     plugins:[
         expo(),
         phoneNumber({  
@@ -36,15 +46,6 @@ export const auth = betterAuth({
                     .then((message: any) => console.log(message.sid))
                     .catch((error: any) => console.log(error));
             } 
-        }) ,
-        adminPlugin({
-            defaultRole:"user",
-            ac,
-            roles:{
-                admin,
-                delivery,
-                user,
-            }
         }),
         oAuthProxy({
             productionURL:"https://smooth-muskox-luckily.ngrok-free.app",

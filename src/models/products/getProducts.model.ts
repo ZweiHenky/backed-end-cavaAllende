@@ -16,11 +16,13 @@ export const getProductsByCategoryPaginationModel = async (categoryId: number, l
         ? await sql`
             SELECT * FROM products 
             WHERE category_id = ${categoryId} AND type_id = ${typeId}
+            AND stock > 0
             LIMIT ${limit} OFFSET ${offset}
         `
         : await sql`
             SELECT * FROM products 
             WHERE category_id = ${categoryId} 
+            AND stock > 0
             LIMIT ${limit} OFFSET ${offset}
         `
 
@@ -28,10 +30,12 @@ export const getProductsByCategoryPaginationModel = async (categoryId: number, l
         ? await sql`
             SELECT count(*) FROM products 
             WHERE category_id = ${categoryId} AND type_id = ${typeId}
+            AND stock > 0
         `
         : await sql`
             SELECT count(*) FROM products 
             WHERE category_id = ${categoryId}
+            AND stock > 0
         `
 
     return {
@@ -48,11 +52,13 @@ export const searchProductsByNameModel = async (name: string, limit: number, off
         ? await sql`
             SELECT * FROM products 
             WHERE name ILIKE ${searchTerm} AND type_id = ${typeId}
+            AND stock > 0
             LIMIT ${limit} OFFSET ${offset}
         `
         : await sql`
             SELECT * FROM products 
             WHERE name ILIKE ${searchTerm}
+            AND stock > 0
             LIMIT ${limit} OFFSET ${offset}
         `
 
@@ -60,10 +66,12 @@ export const searchProductsByNameModel = async (name: string, limit: number, off
         ? await sql`
             SELECT count(*) FROM products 
             WHERE name ILIKE ${searchTerm} AND type_id = ${typeId}
+            AND stock > 0
         `
         : await sql`
             SELECT count(*) FROM products 
             WHERE name ILIKE ${searchTerm}
+            AND stock > 0
         `
 
     return {

@@ -1,12 +1,12 @@
 import { pool } from "#config/db.js";
-import { LocationEntity } from "#domain/entities/location.entity.js";
 import { PurchaseEntity } from "#domain/entities/purchases.entity.js";
 import { PurchaseInsert } from "#domain/interfaces/purchases.interface.js";
+import { CreatePaymentDto } from "#domain/dtos/stripe/createPayment.dto.js";
 
 export const processPurchaseTransaction = async (
     purchaseData: PurchaseInsert, 
-    orderItems: any[],
-    location: LocationEntity
+    orderItems: CreatePaymentDto['metadata']['order']['order_items'],
+    location_id: number
 ) => {
     const client = await pool.connect();
     
@@ -34,9 +34,10 @@ export const processPurchaseTransaction = async (
                 payment_reference, 
                 status,
                 notes,
-                location_id
+                location_id,
+                secure_code
             ) VALUES (
-                $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11
+                $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12
             )
             RETURNING *
         `;
@@ -49,9 +50,10 @@ export const processPurchaseTransaction = async (
             purchaseData.total, 
             purchaseData.payment_method, 
             purchaseData.payment_reference || null, 
-            "paid",
+            "pending",
             purchaseData.notes || null,
-            location.location_id
+            location_id,
+            purchaseData.secure_code || null
         ];
         
         const purchaseRes = await client.query(purchaseQuery, purchaseValues);

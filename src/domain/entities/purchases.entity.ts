@@ -15,6 +15,7 @@ export class PurchaseEntity implements PurchaseInsert {
         public purchase_id?: string,
         public delivery_id?: string,
         public location_id?: number,
+        public secure_code?: string | null,
     ) {}
 
     static fromJSON(json: any): PurchaseEntity {
@@ -31,7 +32,8 @@ export class PurchaseEntity implements PurchaseInsert {
             json.notes,
             json.purchase_id,
             json.delivery_id,
-            json.location_id
+            json.location_id,
+            json.secure_code
         );
     }
 
@@ -49,7 +51,8 @@ export class PurchaseEntity implements PurchaseInsert {
             notes: this.notes,
             purchase_id: this.purchase_id,
             delivery_id: this.delivery_id,
-            location_id: this.location_id
+            location_id: this.location_id,
+            secure_code: this.secure_code
         };
     }
 }

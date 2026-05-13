@@ -7,9 +7,12 @@ export interface PurchaseInsert {
     total: number;
     payment_method: string;
     payment_reference?: string | null;
-    status?: string;
+    status?: TStatus;
     shipping_address?: string | null;
     notes?: string | null;
     delivery_id?: string;
     location_id?: number;
+    secure_code?: string | null;
 }
+
+type TStatus = "pending" | "paid" | "accepted" | "on_the_way" | "completed" | "cancelled" | "collecting";

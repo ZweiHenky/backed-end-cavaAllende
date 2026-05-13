@@ -14,5 +14,6 @@ export const PURCHASE_TABLE = {
     STATUS: "status",
     SHIPPING_ADDRESS: "shipping_address",
     NOTES: "notes",
+    SECURE_CODE: "secure_code",
   },
 } as const;

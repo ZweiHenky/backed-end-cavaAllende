@@ -1,7 +1,10 @@
 import { stripe } from "#config/stripe/stripe.js";
 import { CreatePaymentDto } from "#domain/dtos/stripe/createPayment.dto.js";
+import { PurchaseInsert } from "#domain/interfaces/purchases.interface.js";
 import { createLocation } from "#models/locations/createLocation.js";
 import { getLocationByField } from "#models/locations/getLocationByField.js";
+import { processPurchaseTransaction } from "#models/purchases/processPurchaseTransaction.model.js";
+import { addPurchase } from "#utils/purchases/purchasesInProccess.js";
 
 export const createPaymentService = async (dto: CreatePaymentDto) => {
 
@@ -34,8 +37,27 @@ export const createPaymentService = async (dto: CreatePaymentDto) => {
         { apiVersion: "2026-01-28.clover" as any }
     );
 
+    const secureCode =  Math.floor(100000 + Math.random() * 900000);
+
+    const purchaseData: PurchaseInsert = {
+        user_id: dto.metadata.userId,
+        subtotal: dto.amount,
+        total: dto.amount + dto.shippingCost,
+        payment_method: "stripe",
+        payment_reference: "",
+        status: "pending",
+        secure_code: secureCode.toString(),
+        shipping_cost: dto.shippingCost,
+    };
+
+    const purchase = await processPurchaseTransaction(purchaseData, dto.metadata.order.order_items, locationFound ? locationFound.location_id! : newLocation?.location_id!);
+
+    if (!purchase.purchase_id) {
+        throw new Error("Purchase not created");
+    }
+
     const paymentIntent = await stripe.paymentIntents.create({
-        amount: dto.amount * 100,
+        amount: Math.floor((dto.amount + dto.shippingCost) * 100),
         currency: dto.currency,
         customer: customer.data[0].id,
         automatic_payment_methods: {
@@ -43,14 +65,15 @@ export const createPaymentService = async (dto: CreatePaymentDto) => {
         },
         metadata: {
             userId: dto.metadata.userId,
-            order: JSON.stringify(dto.metadata.order),
-            location: locationFound ? JSON.stringify(locationFound) : JSON.stringify(newLocation)
+            order_id: purchase.purchase_id,
         }
     });
 
     if (!paymentIntent) {
         throw new Error("Payment intent not created");
     }
+
+    addPurchase(purchase.purchase_id.toString());
 
     return {
         paymentIntent: paymentIntent.client_secret,

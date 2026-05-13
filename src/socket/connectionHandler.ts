@@ -9,8 +9,10 @@ export const connectionHandler = ({ io, socket }: ConnectionHandlerInterface) =>
 
     
     socket.on("joinRoom", (idRoom: string) => {
-        socket.join('room-' + idRoom);
-        console.log("user joined room", idRoom);
+        if (!socket.rooms.has('room-' + idRoom)) {
+            socket.join('room-' + idRoom);
+            console.log("user joined room", idRoom);
+        }
     });
 
     socket.on("clientLocation", (data) => {

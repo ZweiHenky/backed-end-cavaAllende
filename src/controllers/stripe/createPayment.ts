@@ -14,7 +14,10 @@ export const createPayment = async (req: Request, res: Response, next: NextFunct
             });
         }
 
+        console.log(dto);
+
         const data = await createPaymentService(dto!);
+        console.log(data);
 
         ok(res, data, 200, "Payment created successfully");
     } catch (error) {
