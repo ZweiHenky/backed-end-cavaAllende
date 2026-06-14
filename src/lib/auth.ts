@@ -14,11 +14,11 @@ const client = twilio(accountSid, authToken);
 
 export const auth = betterAuth({
     database: new Pool({
-        host: "ep-snowy-cherry-ad7zadbl-pooler.c-2.us-east-1.aws.neon.tech",
-        port: 5432,
-        user: "neondb_owner",
-        password: "npg_lxoRV2kEZ8Ua",
-        database: "neondb",
+        host: process.env.DATABASE_HOST,
+        port: Number(process.env.DATABASE_PORT),
+        user: process.env.DATABASE_USER,
+        password: process.env.DATABASE_PASSWORD,
+        database: process.env.DATABASE_DATABASE,
         ssl: true,
     }),
     user:{
