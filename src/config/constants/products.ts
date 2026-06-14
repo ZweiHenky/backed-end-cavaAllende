@@ -16,6 +16,8 @@ export const PRODUCTS_TABLE = {
         NOISE:"noise",
         VIEW:"view",
         MOUTH:"mouth",
-        RECOMENDATION:"recomendation"
+        RECOMENDATION:"recomendation",
+        DESCRIPTION:"description",
+        REGION:"region"
     }
 } as const

@@ -3,12 +3,11 @@ import { Pool } from "pg";
 import { expo } from "@better-auth/expo";
 import { admin as adminPlugin, oAuthProxy, phoneNumber } from "better-auth/plugins";
 import twilio from "twilio";
-import { ac, delivery, user, admin } from "#config/better-auth/permissions.js";
+import { generateAppleClientSecret } from "#config/better-auth/generateAppleClientSecret.js";
 
 
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
-const twilioPhoneNumber = process.env.TWILIO_PHONE_NUMBER;
 
 const client = twilio(accountSid, authToken);
 
@@ -37,11 +36,11 @@ export const auth = betterAuth({
         phoneNumber({  
             sendOTP: ({ phoneNumber, code }, ctx) => { 
                 console.log(phoneNumber, code);
-                client.messages.create({
-                        from: 'whatsapp:+14155238886',
-                        contentSid: 'HX229f5a04fd0510ce1b071852155d3e75',
-                        contentVariables: `{"1":"${code}"}`,
-                        to: `whatsapp:${phoneNumber}`
+                client.messages
+                    .create({
+                        to: phoneNumber,
+                        messagingServiceSid: 'MGa17af1c0e3cfa8fa08347e05dc89ac29',
+                        body: `El código para acceder a Cava Allende es: ${code}`,
                     })
                     .then((message: any) => console.log(message.sid))
                     .catch((error: any) => console.log(error));
@@ -57,7 +56,7 @@ export const auth = betterAuth({
     // advanced: {
     //     disableOriginCheck: true
     // },
-    trustedOrigins:["cavaallende:///","exp://192.168.0.238:8081", "cavaallende://"],
+    trustedOrigins:["cavaallende:///","exp://192.168.0.238:8081", "cavaallende://", "https://appleid.apple.com"],
     baseURL:"https://smooth-muskox-luckily.ngrok-free.app",
     socialProviders:{
         google:{
@@ -66,8 +65,15 @@ export const auth = betterAuth({
             prompt:"select_account",
             redirectURI:"https://smooth-muskox-luckily.ngrok-free.app/api/auth/callback/google",
         },
-        // apple:{
-            
-        // }
+         apple: { 
+            clientId: process.env.APPLE_CLIENT_ID as string, 
+            clientSecret: await generateAppleClientSecret(
+                process.env.APPLE_CLIENT_ID!, 
+                process.env.APPLE_TEAM_ID!, 
+                process.env.APPLE_KEY_ID!, 
+                process.env.APPLE_PRIVATE_KEY!, 
+            ), 
+            appBundleIdentifier: process.env.APPLE_APP_BUNDLE_IDENTIFIER as string, 
+        }, 
     }
 })

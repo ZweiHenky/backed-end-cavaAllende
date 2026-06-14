@@ -52,7 +52,7 @@ export class CreatePaymentDto {
             }
         }
 
-        if (!metadata.location.latitude || !metadata.location.longitude || !metadata.location.text_address) {
+        if (!metadata.location.latitude || !metadata.location.longitude) {
             return [null, new Error("Valid metadata (location) is required")];
         }
 

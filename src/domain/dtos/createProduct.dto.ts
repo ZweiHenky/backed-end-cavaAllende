@@ -18,6 +18,8 @@ export class CreateProductDto {
         public mouth?: string,
         public recomendation?: string,
         public type_id?: number,
+        public description?: string,
+        public region?: string,
     ) {}
 
     static create(data: ProductInterface): [CreateProductDto | null, Error | null] {
@@ -25,37 +27,37 @@ export class CreateProductDto {
         const {
             name, price, stock, category_id, image, is_active,
             producer, variant, fermentation, vintages, temperature, 
-            noise, view, mouth, recomendation, type_id
+            noise, view, mouth, recomendation, type_id, description, region
         } = data
 
-        if (!name) {
-            return [null, new Error("Name is required")]
-        }
+        // if (!name) {
+        //     return [null, new Error("Name is required")]
+        // }
 
-        if (!price) {
-            return [null, new Error("Price is required")]
-        }
+        // if (!price) {
+        //     return [null, new Error("Price is required")]
+        // }
 
-        if (!stock) {
-            return [null, new Error("Stock is required")]
-        }
+        // if (!stock) {
+        //     return [null, new Error("Stock is required")]
+        // }
 
-        if (!category_id) {
-            return [null, new Error("Category id is required")]
-        }
+        // if (!category_id) {
+        //     return [null, new Error("Category id is required")]
+        // }
 
-        if (!image) {
-            return [null, new Error("Image is required")]
-        }
+        // if (!image) {
+        //     return [null, new Error("Image is required")]
+        // }
 
-        if (!type_id) {
-            return [null, new Error("Type id is required")]
-        }
+        // if (!type_id) {
+        //     return [null, new Error("Type id is required")]
+        // }
 
         return [new CreateProductDto(
             name, price, stock, category_id, image, is_active,
             producer, variant, fermentation, vintages, temperature, 
-            noise, view, mouth, recomendation, type_id
+            noise, view, mouth, recomendation, type_id, description, region
         ), null]
     }
 }

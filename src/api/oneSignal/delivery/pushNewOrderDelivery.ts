@@ -24,6 +24,7 @@ export const pushNewOrderDelivery = async (title: string, message: string, order
             },
             target_channel: "push",
             url: "cavaallende://deliveries/detailOrder/" + order_id,
+            android_channel_id: "c2481ea7-8c0a-4097-95ec-c9f6a0fe41c9",
         }),
     };
 

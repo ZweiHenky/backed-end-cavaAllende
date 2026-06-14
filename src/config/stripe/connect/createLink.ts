@@ -3,18 +3,13 @@ import { stripe } from "../stripe.js";
 
 const BASE_URL = process.env.BETTER_AUTH_URL;
 
-export const createLink = async (accountId: string) : Promise<Stripe.Response<Stripe.V2.Core.AccountLink>> => {
+export const createLink = async (accountId: string) : Promise<Stripe.Response<Stripe.AccountLink>> => {
     try {
-        const accountLink = await stripe.v2.core.accountLinks.create({
-        account: accountId,
-        use_case: {
+        const accountLink = await stripe.accountLinks.create({
+            account: accountId,
             type: 'account_onboarding',
-            account_onboarding: {
-            configurations: ['recipient'],
             return_url: `${BASE_URL}/v0/api/stripe/connect/return`,
             refresh_url: `${BASE_URL}/v0/api/stripe/connect/retry`,
-            },
-        },
         });
 
         return accountLink;

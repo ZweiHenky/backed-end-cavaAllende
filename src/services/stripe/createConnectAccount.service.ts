@@ -12,7 +12,6 @@ export const createConnectAccountService = async (dto: CreateConnectAccountDto) 
 
     const newAccount = await createStripe({
         user_id: dto.user_id,
-        amount: 0,
         is_active: false,
         stripe_id: account.id,
     });

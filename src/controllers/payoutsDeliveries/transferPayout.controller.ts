@@ -7,9 +7,9 @@ export const transferPayout = async (req: Request, res: Response, next: NextFunc
         const { user_id, amount } = req.body;
 
         if (!user_id || amount === undefined) {
-            return res.status(400).json({ 
+            return res.status(400).json({
                 status: 400,
-                message: "user_id y amount son requeridos" 
+                message: "user_id y amount son requeridos"
             });
         }
 

@@ -8,10 +8,12 @@ import { auth } from '#lib/auth.js';
 import { toNodeHandler } from 'better-auth/node';
 import { createServer } from 'http';
 import { initSocket } from '#socket/initSocket.js';
+import { API_KEY, APP_ID, ONESIGNAL_URL } from '#api/oneSignal/envs.js';
 
 const app = express();
 
 const server = createServer(app);
+
 
 initSocket(server);
 
@@ -21,7 +23,7 @@ app.use(cors({
 }));
 
 app.use((req, res, next) => {
-  if (req.originalUrl === "/api/v0/webhooks/stripe") {
+  if (req.originalUrl?.includes("/api/v0/webhooks/stripe")) {
     express.raw({ type: "application/json" })(req, res, next);
   } else {
     express.json()(req, res, next);

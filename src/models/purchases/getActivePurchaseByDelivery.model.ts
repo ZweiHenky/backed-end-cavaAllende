@@ -11,7 +11,7 @@ export const getActivePurchaseByDeliveryModel = async (deliveryId: string) => {
         LEFT JOIN locations l ON p.location_id = l.location_id
         LEFT JOIN "user" u ON p.user_id = u.id
         WHERE p.delivery_id = ${deliveryId}
-          AND p.status NOT IN ('completed', 'cancelled', 'paid', 'accepted', 'pending')
+          AND p.status IN ('collecting', 'on_the_way')
         ORDER BY p.created_at DESC
         LIMIT 1
     `;

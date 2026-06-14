@@ -16,6 +16,8 @@ export interface ProductInterface {
     mouth?: string;
     recomendation?: string;
     type_id?: number;
+    description?: string;
+    region?: string;
 }
 
 export interface ReduceStockItem {

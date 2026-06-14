@@ -60,9 +60,10 @@ export const createPaymentService = async (dto: CreatePaymentDto) => {
         amount: Math.floor((dto.amount + dto.shippingCost) * 100),
         currency: dto.currency,
         customer: customer.data[0].id,
-        automatic_payment_methods: {
-            enabled: true,
-        },
+        // automatic_payment_methods: {
+        //     enabled: true,
+        // },
+        payment_method_types:["card"],
         metadata: {
             userId: dto.metadata.userId,
             order_id: purchase.purchase_id,

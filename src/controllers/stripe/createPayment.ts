@@ -5,13 +5,11 @@ import { NextFunction, Request, Response } from "express";
 
 export const createPayment = async (req: Request, res: Response, next: NextFunction) => {
     try {
+        console.log(req.body);
         const [dto, error] = CreatePaymentDto.create(req.body);
 
         if (error) {
-            return res.status(400).json({ 
-                status: 400,
-                message: error.message 
-            });
+            return next(new Error(error.message));
         }
 
         console.log(dto);

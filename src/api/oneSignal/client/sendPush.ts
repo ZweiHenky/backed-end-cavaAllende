@@ -23,6 +23,7 @@ export const sendPush = async (title: string, message: string, user_id: string, 
             },
             target_channel: "push",
             url: "cavaallende://orders/" + order_id,
+            android_channel_id: "c2481ea7-8c0a-4097-95ec-c9f6a0fe41c9",
         }),
     };
 

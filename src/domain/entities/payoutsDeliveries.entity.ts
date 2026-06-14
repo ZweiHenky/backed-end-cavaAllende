@@ -8,7 +8,8 @@ export class PayoutsDeliveriesEntity implements PayoutsDeliveriesInterface {
         public status?: string | null,
         public payment_method?: string | null,
         public created_at?: Date | string | null,
-    ) {}
+        public transfer_id?: string | null,
+    ) { }
 
     static fromJSON(json: any): PayoutsDeliveriesEntity {
         return new PayoutsDeliveriesEntity(
@@ -17,7 +18,8 @@ export class PayoutsDeliveriesEntity implements PayoutsDeliveriesInterface {
             json.total_amount,
             json.status,
             json.payment_method,
-            json.created_at
+            json.created_at,
+            json.transfer_id
         );
     }
 
@@ -28,7 +30,8 @@ export class PayoutsDeliveriesEntity implements PayoutsDeliveriesInterface {
             total_amount: this.total_amount,
             status: this.status,
             payment_method: this.payment_method,
-            created_at: this.created_at
+            created_at: this.created_at,
+            transfer_id: this.transfer_id
         };
     }
 }

@@ -83,7 +83,7 @@ export const searchProductsByNameModel = async (name: string, limit: number, off
 export const getProductsStockModel = async (productIds: number[]) => {
     if (!productIds || productIds.length === 0) return []
     const res = await sql`
-        SELECT product_id, stock 
+        SELECT product_id, stock, name 
         FROM products 
         WHERE product_id = ANY(${productIds})
     `

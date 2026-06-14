@@ -7,19 +7,19 @@ export const createProductModel = async (data: CreateProductDto) => {
     const {
         name, price, stock, category_id, image, is_active,
         producer, variant, fermentation, vintages, temperature, 
-        noise, view, mouth, recomendation, type_id
+        noise, view, mouth, recomendation, type_id, description, region
     } = data
 
     const res = await sql`
         INSERT INTO products (
             name, price, stock, category_id, image, is_active,
             producer, variant, fermentation, vintages, temperature, 
-            noise, view, mouth, recomendation, type_id
+            noise, view, mouth, recomendation, type_id, description, region
         ) 
         VALUES (
             ${name}, ${price}, ${stock}, ${category_id}, ${image}, ${is_active},
             ${producer}, ${variant}, ${fermentation}, ${vintages}, ${temperature}, 
-            ${noise}, ${view}, ${mouth}, ${recomendation}, ${type_id}
+            ${noise}, ${view}, ${mouth}, ${recomendation}, ${type_id}, ${description}, ${region}
         )
         RETURNING *
     `

@@ -1,5 +1,6 @@
 import { sendPush } from "#api/oneSignal/client/sendPush.js";
 import { pushNewOrderDelivery } from "#api/oneSignal/delivery/pushNewOrderDelivery.js";
+import { pushNewOrderAdmin } from "#api/oneSignal/admin/pushNewOrderAdmin.js";
 import { getPurchaseById } from "#models/purchases/getById.js";
 import { updateStatusAndPaymentId } from "#models/purchases/updateStatusAndPaymentId.js";
 import { addCharge } from "#utils/purchases/chargeInProcess.js";
@@ -14,20 +15,20 @@ export const processSuccessfulPaymentService = async (paymentIntent: Stripe.Paym
     }
 
     const purchase = await getPurchaseById(Number(orderId));
-    
+
     if (purchase?.purchase_id) {
         const res = await updateStatusAndPaymentId(Number(purchase.purchase_id), "paid", paymentIntent.id);
-        
+
         if (res) {
             sendPush("Compra realizada", `Tu compra #${purchase.purchase_id} ha sido realizada`, purchase.user_id!, purchase.purchase_id!);
-            pushNewOrderDelivery("Nueva compra", `Nueva compra realizada por ${res.user_id}`, res.purchase_id!);
+            pushNewOrderAdmin("Nueva compra", `Nueva compra realizada por ${res.user_id}`, res.purchase_id!);
 
             return {
                 success: true,
                 purchase: res
             };
         }
-    }else{
+    } else {
         throw new Error("Purchase not found");
     }
 

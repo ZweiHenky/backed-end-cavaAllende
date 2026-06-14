@@ -9,9 +9,9 @@ export class EarningsDeliveriesEntity implements EarningsDeliveriesInterface {
         public type: string,
         public earning_id?: number,
         public available_at?: Date | string | null,
-        public reference_id?: string | null,
+        public payout_id?: string | null,
         public created_at?: Date | string,
-    ) {}
+    ) { }
 
     static fromJSON(json: any): EarningsDeliveriesEntity {
         return new EarningsDeliveriesEntity(
@@ -22,7 +22,7 @@ export class EarningsDeliveriesEntity implements EarningsDeliveriesInterface {
             json.type,
             json.earning_id,
             json.available_at,
-            json.reference_id,
+            json.payout_id,
             json.created_at
         );
     }
@@ -35,7 +35,7 @@ export class EarningsDeliveriesEntity implements EarningsDeliveriesInterface {
             amount: this.amount,
             status: this.status,
             available_at: this.available_at,
-            reference_id: this.reference_id,
+            payout_id: this.payout_id,
             created_at: this.created_at,
             type: this.type
         };

@@ -13,7 +13,7 @@ export const getPurchaseHistoryByUser = async (req: Request, res: Response, next
             });
         }
 
-        const purchases = await getPurchaseHistoryByUserService(user_id);
+        const purchases = await getPurchaseHistoryByUserService(user_id as string);
 
         ok(res, purchases, 200, "Purchase history retrieved successfully");
     } catch (error) {
