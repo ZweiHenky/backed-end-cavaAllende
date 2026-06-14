@@ -1,4 +1,5 @@
 import { betterAuth } from "better-auth";
+//@ts-expect-error no existen tipos para esta librería
 import { Pool } from "pg";
 import { expo } from "@better-auth/expo";
 import { admin as adminPlugin, oAuthProxy, phoneNumber } from "better-auth/plugins";

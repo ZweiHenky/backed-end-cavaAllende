@@ -8,7 +8,6 @@ import { auth } from '#lib/auth.js';
 import { toNodeHandler } from 'better-auth/node';
 import { createServer } from 'http';
 import { initSocket } from '#socket/initSocket.js';
-import { API_KEY, APP_ID, ONESIGNAL_URL } from '#api/oneSignal/envs.js';
 
 const app = express();
 

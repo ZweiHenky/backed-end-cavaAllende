@@ -9,5 +9,5 @@ server.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
 
-//payToStripeConnect();
-// payoutStripeToDelivery();
+payToStripeConnect();
+payoutStripeToDelivery();
