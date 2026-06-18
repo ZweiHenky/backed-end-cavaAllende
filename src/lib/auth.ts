@@ -40,7 +40,7 @@ export const auth = betterAuth({
             } 
         }),
         oAuthProxy({
-            productionURL:"https://smooth-muskox-luckily.ngrok-free.app",
+            productionURL:process.env.BETTER_AUTH_URL,
         })
     ],
     emailAndPassword:{
@@ -50,13 +50,13 @@ export const auth = betterAuth({
     //     disableOriginCheck: true
     // },
     trustedOrigins:["cavaallende:///","exp://192.168.0.238:8081", "cavaallende://", "https://appleid.apple.com"],
-    baseURL:"https://smooth-muskox-luckily.ngrok-free.app",
+    baseURL:process.env.BETTER_AUTH_URL,
     socialProviders:{
         google:{
             clientId: process.env.GOOGLE_CLIENT_ID!,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
             prompt:"select_account",
-            redirectURI:"https://smooth-muskox-luckily.ngrok-free.app/api/auth/callback/google",
+            redirectURI:`${process.env.BETTER_AUTH_URL}/api/auth/callback/google`,
         },
          apple: { 
             clientId: process.env.APPLE_CLIENT_ID as string, 
