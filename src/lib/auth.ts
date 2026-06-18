@@ -1,10 +1,9 @@
 import { betterAuth } from "better-auth";
-//@ts-expect-error no existen tipos para esta librería
-import { Pool } from "pg";
 import { expo } from "@better-auth/expo";
-import { admin as adminPlugin, oAuthProxy, phoneNumber } from "better-auth/plugins";
+import { oAuthProxy, phoneNumber } from "better-auth/plugins";
 import twilio from "twilio";
 import { generateAppleClientSecret } from "#config/better-auth/generateAppleClientSecret.js";
+import { pool } from "#config/db.js";
 
 
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
@@ -14,14 +13,7 @@ const client = twilio(accountSid, authToken);
 
 
 export const auth = betterAuth({
-    database: new Pool({
-        host: process.env.DATABASE_HOST,
-        port: Number(process.env.DATABASE_PORT),
-        user: process.env.DATABASE_USER,
-        password: process.env.DATABASE_PASSWORD,
-        database: process.env.DATABASE_DATABASE,
-        ssl: true,
-    }),
+    database: pool,
     user:{
         additionalFields:{
             role:{

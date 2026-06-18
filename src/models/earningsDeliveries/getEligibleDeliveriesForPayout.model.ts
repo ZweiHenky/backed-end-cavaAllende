@@ -1,4 +1,4 @@
-import { sql } from "#config/db.js";
+import { pool } from "#config/db.js";
 
 interface EligibleDelivery {
     user_id: string;
@@ -8,7 +8,7 @@ interface EligibleDelivery {
 
 export const getEligibleDeliveriesForPayout = async (): Promise<EligibleDelivery[]> => {
     try {
-        const res = await sql`
+        const res = await pool.query(`
             SELECT 
                 u.id as user_id,
                 COALESCE(SUM(e.amount)::FLOAT, 0) as available_amount,
@@ -22,8 +22,8 @@ export const getEligibleDeliveriesForPayout = async (): Promise<EligibleDelivery
 
             GROUP BY u.id, s.stripe_id
             HAVING COALESCE(SUM(e.amount)::FLOAT, 0) > 0
-        `;
-        return res as unknown as EligibleDelivery[];
+        `);
+        return res.rows;
     } catch (error) {
         console.error("Error al obtener deliveries elegibles para pago:", error);
         throw error;

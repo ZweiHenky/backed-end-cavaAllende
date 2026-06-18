@@ -23,9 +23,18 @@ const runPayoutCycle = async () => {
 };
 
 export const payToStripeConnect = async () => {
-    // Ejecutar una vez al arrancar para validación/recuperación
-    runPayoutCycle();
+    try{
+        
+        // Ejecutar una vez al arrancar para validación/recuperación
+        runPayoutCycle();
 
-    // Programar para ejecutarse cada 5 minutos
-    cron.schedule('*/5 * * * *', runPayoutCycle);
+        // Programar para ejecutarse a las 2:00 y 4:00 AM hora de la Ciudad de México
+        cron.schedule('0 4 * * *', runPayoutCycle, {
+            timezone: 'America/Mexico_City'
+        });
+    }catch(error){
+        console.error("Error en el cron de stripe para el pago a delivery:", error);
+        // throw error;
+    }
+
 };

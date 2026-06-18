@@ -1,7 +1,7 @@
 import Stripe from "stripe";
 import { stripe } from "../stripe.js";
 
-export const createAccount = async (email: string, name: string) : Promise<Stripe.Response<Stripe.Account>> => {
+export const createAccount = async (email: string, name: string) : Promise<Stripe.Response<Stripe.Account> | void> => {
     try {
 
         const account = await stripe.accounts.create({
@@ -38,6 +38,6 @@ export const createAccount = async (email: string, name: string) : Promise<Strip
         return account;
     } catch (error) {
         console.error(error);
-        throw error;
+        // throw error;
     }
 }

@@ -17,6 +17,6 @@ export const tranferToAccountDelivery = async (amount: number, destination: stri
         return res;
     } catch (error: any) {
         console.log("Error al transferir el dinero", error)
-        throw error;
+        // throw error;
     }
 }

@@ -2,7 +2,7 @@ import Stripe from "stripe";
 import { stripe } from "../stripe.js";
 
 
-export const getBalanceAccount = async (account_id?: string): Promise<Stripe.Balance> => {
+export const getBalanceAccount = async (account_id?: string): Promise<Stripe.Balance | void> => {
     try {
 
         if (account_id) {
@@ -16,6 +16,6 @@ export const getBalanceAccount = async (account_id?: string): Promise<Stripe.Bal
         }
     } catch (error: any) {
         console.error(`Error al obtener el balance: ${error}`)
-        throw error
+        // throw error
     }
 }

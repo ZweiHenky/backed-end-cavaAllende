@@ -1,46 +1,46 @@
-import { sql } from "#config/db.js"
+import { pool } from "#config/db.js"
 
 export const getProductsModel = async () => {
-    const res = await sql`SELECT * FROM products`
-    return res
+    const res = await pool.query(`SELECT * FROM products`)
+    return res.rows
 }
 
 export const getProductByIdModel = async (id: number) => {
-    const res = await sql`SELECT * FROM products WHERE product_id = ${id}`
-    return res
+    const res = await pool.query(`SELECT * FROM products WHERE product_id = $1`, [id])
+    return res.rows[0]
 }
 
 
 export const getProductsByCategoryPaginationModel = async (categoryId: number, limit: number, offset: number, typeId?: number) => {
     const products = typeId
-        ? await sql`
+        ? await pool.query(`
             SELECT * FROM products 
-            WHERE category_id = ${categoryId} AND type_id = ${typeId}
+            WHERE category_id = $1 AND type_id = $2
             AND stock > 0
-            LIMIT ${limit} OFFSET ${offset}
-        `
-        : await sql`
+            LIMIT $3 OFFSET $4
+        `, [categoryId, typeId, limit, offset])
+        : await pool.query(`
             SELECT * FROM products 
-            WHERE category_id = ${categoryId} 
+            WHERE category_id = $1 
             AND stock > 0
-            LIMIT ${limit} OFFSET ${offset}
-        `
+            LIMIT $2 OFFSET $3
+        `, [categoryId, limit, offset])
 
     const total = typeId
-        ? await sql`
+        ? await pool.query(`
             SELECT count(*) FROM products 
-            WHERE category_id = ${categoryId} AND type_id = ${typeId}
+            WHERE category_id = $1 AND type_id = $2
             AND stock > 0
-        `
-        : await sql`
+        `, [categoryId, typeId])
+        : await pool.query(`
             SELECT count(*) FROM products 
-            WHERE category_id = ${categoryId}
+            WHERE category_id = $1
             AND stock > 0
-        `
+        `, [categoryId])
 
     return {
-        products,
-        total: total[0].count
+        products: products.rows,
+        total: total.rows[0].count
     }
 }
 
@@ -49,43 +49,43 @@ export const searchProductsByNameModel = async (name: string, limit: number, off
     const searchTerm = `%${name}%`
 
     const products = typeId
-        ? await sql`
+        ? await pool.query(`
             SELECT * FROM products 
-            WHERE name ILIKE ${searchTerm} AND type_id = ${typeId}
+            WHERE name ILIKE $1 AND type_id = $2
             AND stock > 0
-            LIMIT ${limit} OFFSET ${offset}
-        `
-        : await sql`
+            LIMIT $3 OFFSET $4
+        `, [searchTerm, typeId, limit, offset])
+        : await pool.query(`
             SELECT * FROM products 
-            WHERE name ILIKE ${searchTerm}
+            WHERE name ILIKE $1
             AND stock > 0
-            LIMIT ${limit} OFFSET ${offset}
-        `
+            LIMIT $2 OFFSET $3
+        `, [searchTerm, limit, offset])
 
     const total = typeId
-        ? await sql`
+        ? await pool.query(`
             SELECT count(*) FROM products 
-            WHERE name ILIKE ${searchTerm} AND type_id = ${typeId}
+            WHERE name ILIKE $1 AND type_id = $2
             AND stock > 0
-        `
-        : await sql`
+        `, [searchTerm, typeId])
+        : await pool.query(`
             SELECT count(*) FROM products 
-            WHERE name ILIKE ${searchTerm}
+            WHERE name ILIKE $1
             AND stock > 0
-        `
+        `, [searchTerm])
 
     return {
-        products,
-        total: total[0].count
+        products: products.rows,
+        total: total.rows[0].count
     }
 }
 
 export const getProductsStockModel = async (productIds: number[]) => {
     if (!productIds || productIds.length === 0) return []
-    const res = await sql`
+    const res = await pool.query(`
         SELECT product_id, stock, name 
         FROM products 
-        WHERE product_id = ANY(${productIds})
-    `
-    return res
+        WHERE product_id = ANY($1)
+    `, [productIds])
+    return res.rows
 }

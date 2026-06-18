@@ -7,7 +7,7 @@ export const createPayoutStripeConnect = async (account_id?: string, amount?: nu
 
         const getBalance = await getBalanceAccount(account_id);
 
-        if (getBalance.available[0].amount === 0) {
+        if (getBalance?.available[0].amount === 0) {
             console.log(`[${account_id}] No hay saldo disponible para pagar`);
             return;
         }
@@ -21,6 +21,10 @@ export const createPayoutStripeConnect = async (account_id?: string, amount?: nu
         }
 
         const accountExist = await getAccount(account_id);
+
+        if (!accountExist) {
+            throw new Error("Error al obtener la cuenta");
+        }
 
         if (!accountExist.id) {
             throw new Error("La cuenta no existe");
@@ -44,6 +48,6 @@ export const createPayoutStripeConnect = async (account_id?: string, amount?: nu
         return payout;
     } catch (error) {
         console.error("Error al crear el pago de stripe para el pago a delivery:", error);
-        throw error;
+        // throw error;
     }
 }

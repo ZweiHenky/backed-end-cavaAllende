@@ -9,6 +9,6 @@ export const getListBankAccounts = async (account_id: string) => {
         return bankAccounts;
     } catch (error) {
         console.error("Error al obtener las cuentas bancarias:", error);
-        throw error;
+        // throw error;
     }
 }

@@ -1,25 +1,30 @@
-import { sql as defaultSql } from "#config/db.js";
+import { pool } from "#config/db.js";
 import { CreatePayoutDto } from "#domain/dtos/payoutsDeliveries/createPayout.dto.js";
 
 export const addPayoutModel = async (data: CreatePayoutDto, tx?: any) => {
-    const sql = tx || defaultSql;
-    
-    const res = await sql`
+    const query = tx || pool;
+
+    const res = await query.query(`
         INSERT INTO payouts_deliveries (
             user_id, total_amount, status, payment_method, created_at
         ) VALUES (
-            ${data.user_id || null}, 
-            ${data.total_amount || 0}, 
-            ${data.status || 'PENDING'}, 
-            ${data.payment_method || null},
+            $1, 
+            $2, 
+            $3, 
+            $4,
             NOW()
         )
         RETURNING *
-    `;
+    `, [
+        data.user_id,
+        data.total_amount,
+        data.status,
+        data.payment_method
+    ]);
 
-    if (res.length === 0) {
+    if (res.rows.length === 0) {
         throw new Error("Payout not created");
     }
 
-    return res[0];
+    return res.rows[0];
 };

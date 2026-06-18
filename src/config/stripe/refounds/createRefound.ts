@@ -14,6 +14,6 @@ export const createRefiynd = async (paymentIntentId: string, amount?: number) =>
         return refund;
     } catch (error) {
         console.error(error);
-        throw error;
+        // throw error;
     }
 }

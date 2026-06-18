@@ -3,7 +3,7 @@ import { stripe } from "../stripe.js";
 
 const BASE_URL = process.env.BETTER_AUTH_URL;
 
-export const createLink = async (accountId: string) : Promise<Stripe.Response<Stripe.AccountLink>> => {
+export const createLink = async (accountId: string) : Promise<Stripe.Response<Stripe.AccountLink> | void> => {
     try {
         const accountLink = await stripe.accountLinks.create({
             account: accountId,
@@ -15,6 +15,6 @@ export const createLink = async (accountId: string) : Promise<Stripe.Response<St
         return accountLink;
     } catch (error) {
         console.error(error);
-        throw error;
+        // throw error;    
     }
 }

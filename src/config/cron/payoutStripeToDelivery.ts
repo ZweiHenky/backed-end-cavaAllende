@@ -32,10 +32,12 @@ const runPayoutCycle = async () => {
 export const payoutStripeToDelivery = async () => {
     try {
         runPayoutCycle();
-        cron.schedule('*/5 * * * *', runPayoutCycle);
+        cron.schedule('0 2 * * *', runPayoutCycle, {
+            timezone: 'America/Mexico_City'
+        });
     } catch (error) {
         console.error("Error en el cron de stripe para el pago a delivery:", error);
-        throw error;
+        // throw error;
     }
 
 }

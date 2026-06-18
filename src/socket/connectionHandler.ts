@@ -5,32 +5,53 @@ interface ConnectionHandlerInterface {
     socket: Socket;
 }
 
+const locations = new Map<string, any>();
+
 export const connectionHandler = ({ io, socket }: ConnectionHandlerInterface) => {
 
-    
-    socket.on("joinRoom", (idRoom: string) => {
-        if (!socket.rooms.has('room-' + idRoom)) {
-            socket.join('room-' + idRoom);
-            console.log("user joined room", idRoom);
+    socket.on("joinRoom", (idRoom) => {
+
+        socket.join(`room-${idRoom}`);
+
+        const clientLocation =
+            locations.get(`client-${idRoom}`);
+
+        const deliveryLocation =
+            locations.get(`delivery-${idRoom}`);
+
+        if (clientLocation) {
+            socket.emit("clientLocation", clientLocation);
+        }
+
+        if (deliveryLocation) {
+            socket.emit("deliveryLocation", deliveryLocation);
         }
     });
 
     socket.on("clientLocation", (data) => {
 
-        socket.to(`room-${data.purchase_id}`).emit("clientLocation", {
-        latitude: data.latitude,
-        longitude: data.longitude
+        locations.set(`client-${data.purchase_id}`, {
+            latitude: data.latitude,
+            longitude: data.longitude
         });
 
+        socket.to(`room-${data.purchase_id}`).emit(
+            "clientLocation",
+            locations.get(`client-${data.purchase_id}`)
+        );
     });
 
     socket.on("deliveryLocation", (data) => {
 
-        socket.to(`room-${data.purchase_id}`).emit("deliveryLocation", {
-        latitude: data.latitude,
-        longitude: data.longitude
+        locations.set(`delivery-${data.purchase_id}`, {
+            latitude: data.latitude,
+            longitude: data.longitude
         });
 
+        socket.to(`room-${data.purchase_id}`).emit(
+            "deliveryLocation",
+            locations.get(`delivery-${data.purchase_id}`)
+        );
     });
 
     socket.on("disconnect", () => {

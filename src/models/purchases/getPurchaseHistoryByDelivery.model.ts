@@ -1,13 +1,13 @@
-import { sql } from "#config/db.js";
+import { pool } from "#config/db.js";
 
 export const getPurchaseHistoryByDeliveryModel = async (deliveryId: string) => {
-    const res = await sql`
+    const res = await pool.query(`
         SELECT *
         FROM purchases
-        WHERE delivery_id = ${deliveryId}
+        WHERE delivery_id = $1
           AND status IN ('completed', 'cancelled')
         ORDER BY created_at DESC
-    `;
+    `, [deliveryId]);
 
-    return res;
+    return res.rows; 
 };

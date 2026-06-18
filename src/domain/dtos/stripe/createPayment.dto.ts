@@ -57,6 +57,7 @@ export class CreatePaymentDto {
         }
 
         if (!shippingCost || typeof shippingCost !== 'number') {
+            console.log(shippingCost);
             return [null, new Error("Valid shippingCost is required")];
         }
 

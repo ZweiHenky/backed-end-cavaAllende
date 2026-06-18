@@ -1,24 +1,23 @@
-import { sql as defaultSql } from "#config/db.js";
-import { ReduceStockItem } from "#domain/interfaces/product.interface.js";
+import { pool } from "#config/db.js";
 
-export const reduceProductStockModel = async (items: ReduceStockItem[], tx?: any) => {
+export const reduceProductStockModel = async (items: any[], tx?: any) => {
     const updatedProducts = [];
-    
-    const sql = tx || defaultSql;
+
+    const sql = tx || pool;
     for (const item of items) {
         if (!item.product || !item.product.product_id) continue;
-        
-        const res = await sql`
+
+        const res = await sql.query(`
             UPDATE products
-            SET stock = stock - ${item.quantity}
-            WHERE product_id = ${item.product.product_id}
+            SET stock = stock - $1
+            WHERE product_id = $2
             RETURNING *
-        `;
-        
-        if (res.length > 0) {
-            updatedProducts.push(res[0]);
+        `, [item.quantity, item.product.product_id]);
+
+        if (res.rows.length > 0) {
+            updatedProducts.push(res.rows[0]);
         }
     }
-    
+
     return updatedProducts;
 };

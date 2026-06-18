@@ -17,7 +17,7 @@ export const processPayoutTransaction = async (data: CreatePayoutDto, transfer_i
             RETURNING *
         `;
         const payoutValues = [
-            data.user_id!,
+            data.user_id,
             data.total_amount,
             data.status,
             data.payment_method,

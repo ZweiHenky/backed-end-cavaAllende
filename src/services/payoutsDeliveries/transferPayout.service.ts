@@ -8,7 +8,11 @@ import { addTransfer } from "#utils/transfers/transfersInProcess.js";
 export const transferPayoutService = async (user_id: string, amount: number) => {
     // 0. Validate available amount
     const summary = await getEarningsSummaryModel(user_id);
-    if (summary.pending < amount) {
+
+    console.log("Resumen de pagos", summary.pending, summary.available, summary.total);
+
+
+    if (summary.available < amount) {
         throw new Error(`El monto a transferir (${amount}) supera el monto disponible (${summary.available})`);
     }
 
